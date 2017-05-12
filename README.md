@@ -19,3 +19,23 @@ https://jsonplaceholder.typicode.com/
 As this is a tutorial for iOS, the first step would be to create a simple Single View Application. This can be easily done in Xcode 8, using iOS 10.3 as the deployment target. In order to keep things as simple as possible, no UI elements will be used, and all code will be inserted directly into the default ViewController class contained in ViewController.swift.
 
 ## GET That Data!
+Here is how to make a simple GET request to the sample API server.
+
+       //simple GET request
+        let config = URLSessionConfiguration.default
+        let session = URLSession(configuration: config)
+        let urlString = URL(string: "https://jsonplaceholder.typicode.com/users/2")
+        if let url = urlString {
+            let task = session.dataTask(with: url) {
+                (data, response, error) in
+                if error != nil {
+                    print(error!.localizedDescription)
+                }
+                else {
+                    if let dataString = data {
+                        print(dataString)
+                    }
+                }
+            }
+            task.resume()
+        }
