@@ -12,7 +12,6 @@ class ViewController: UIViewController {
 
     // simplest GET request using shared URLSession
     func getRequestSimple() {
-        print("GET request example 1")
         let session = URLSession.shared
         let urlString = URL(string: "https://reqres.in/api/users/1")
         if let url = urlString {
@@ -22,7 +21,8 @@ class ViewController: UIViewController {
                     print(error!.localizedDescription)
                 }
                 else {
-                    if let dataString = String(data: data!, encoding: String.Encoding.utf8) {
+                    if let dataString = String(data: data!,encoding: String.Encoding.utf8) {
+                        print("GET request example 1")
                         print(dataString)
                     }
                 }
@@ -34,10 +34,9 @@ class ViewController: UIViewController {
     
     // GET request using default URLSessionConfiguration
     func getRequestDefaultConfig() {
-        print("GET request example 2")
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config)
-        let urlString = URL(string: "https://reqres.in/api/users?page=2")
+        let urlString = URL(string: "https://reqres.in/api/unknown/1")
         if let url = urlString {
             let task = session.dataTask(with: url) {
                 (data, response, error) in
@@ -45,7 +44,8 @@ class ViewController: UIViewController {
                     print(error!.localizedDescription)
                 }
                 else {
-                    if let dataString = String(data: data!, encoding: String.Encoding.utf8) {
+                    if let dataString = String(data: data!,encoding: String.Encoding.utf8) {
+                        print("GET request example 2")
                         print(dataString)
                     }
                 }
@@ -54,21 +54,45 @@ class ViewController: UIViewController {
         }
     }
     
-    func getRequestWithParams() {
-        print("GET request example 3")
+    // POST request using URLRequest
+    func postRequestSimple() {
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config)
-        let urlString = URL(string: "https://reqres/api/unknown")
-        if let url = urlString {
-            let request = URLRequest(url: url)
-            request.httpMethod = "GET "
+        let urlString = URL(string: "https://reqres.in/api/users")
+        if let urlToBeUsed = urlString {
+            var request = URLRequest(url: urlToBeUsed)
+            request.httpMethod = "POST"
+            let newData: [String: Any] = ["first_name": "John", "last_name": "Doe"]
+            let jsonData: Data
+            do {
+                jsonData = try JSONSerialization.data(withJSONObject: newData, options: [])
+                request.httpBody = jsonData
+            } catch {
+                print("Error: cannot create JSON")
+                return
+            }
+            let task = session.dataTask(with: request) {
+                (data, response, error) in
+                if error != nil {
+                    print(error!.localizedDescription)
+                }
+                else {
+                    if let outputString = String(data: data!,encoding: String.Encoding.utf8) {
+                        print("POST request example 1")
+                        print(outputString)
+                    }
+                }
+            }
+            task.resume()
         }
     }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         getRequestSimple()
         getRequestDefaultConfig()
+        postRequestSimple()
     }
 
     override func didReceiveMemoryWarning() {
