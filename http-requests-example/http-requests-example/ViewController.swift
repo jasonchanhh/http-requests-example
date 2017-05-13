@@ -60,18 +60,18 @@ class ViewController: UIViewController {
         let session = URLSession(configuration: config)
         let urlString = URL(string: "https://reqres.in/api/users")
         if let urlToBeUsed = urlString {
-            var request = URLRequest(url: urlToBeUsed)
-            request.httpMethod = "POST"
+            var requestToPost = URLRequest(url: urlToBeUsed)
+            requestToPost.httpMethod = "POST"
             let newData: [String: Any] = ["first_name": "John", "last_name": "Doe"]
             let jsonData: Data
             do {
                 jsonData = try JSONSerialization.data(withJSONObject: newData, options: [])
-                request.httpBody = jsonData
+                requestToPost.httpBody = jsonData
             } catch {
                 print("Error: cannot create JSON")
                 return
             }
-            let task = session.dataTask(with: request) {
+            let task = session.dataTask(with: requestToPost) {
                 (data, response, error) in
                 if error != nil {
                     print(error!.localizedDescription)
